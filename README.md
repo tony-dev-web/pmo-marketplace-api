@@ -41,9 +41,39 @@ curl -X PUT https://piecemotooccasion.eu/api/v1/produits \
         "modele": "XJ 600 Diversion", "stock": 1}]}'
 ```
 
+## Codes et erreurs
+
+Toute erreur revient en JSON : `{"erreur": "…"}`.
+
+| Code | Quand | Que faire |
+|---|---|---|
+| `200` | Appel accepté, même si certaines fiches sont refusées | Lire le tableau `erreurs` de la réponse |
+| `400` | JSON invalide, aucune fiche valide, date mal formée | Corriger l'appel, ne pas réessayer tel quel |
+| `401` | Jeton absent, mal formé ou révoqué | Regénérer le jeton dans l'espace vendeur |
+| `404` | Référence ou commande inconnue chez vous | La recherche est limitée à votre catalogue |
+| `405` | Méthode non autorisée sur ce chemin | Voir le tableau des points d'entrée |
+| `429` | Plus de 600 requêtes en dix minutes | Attendre, puis grouper : 200 fiches par `PUT` |
+
+## Limites
+
+- 600 requêtes par jeton et par tranche de dix minutes, tous chemins confondus.
+- 200 fiches par appel `PUT /produits`. Mille pièces tiennent en cinq appels.
+- `GET /commandes` rend les 500 dernières commandes payées, de la plus récente à la plus ancienne. Utilisez `depuis` pour les synchronisations régulières.
+- Six images par pièce, 8 Mo chacune. Une adresse injoignable ou qui ne renvoie pas une image est ignorée : la pièce est créée sans elle.
+- Un seul jeton par vendeur ; en regénérer un coupe immédiatement l'ancien.
+
+## Mettre en place en quatre étapes
+
+1. Générez le jeton dans l'espace vendeur et vérifiez-le avec `GET /moi`.
+2. Envoyez le catalogue par lots de 200 en `PUT /produits`, corrigez les fiches listées dans `erreurs`.
+3. À chaque changement de stock, `PATCH /produits/<reference>/stock`. Prévoyez un envoi complet quotidien : il rattrape ce que vos évènements ont manqué.
+4. Recevez les commandes par webhook ou par `GET /commandes?depuis=…`, expédiez, puis déclarez le suivi par `POST /commandes/<id>/expedier`.
+
 ## Notification des commandes
 
 Renseignez une URL de notification dans votre espace vendeur : chaque commande payée y est envoyée en `POST` JSON, signée par l'en-tête `X-Pmo-Signature: sha256=<HMAC-SHA256 du corps avec votre jeton>`. Vérifiez la signature sur le corps **brut** : re-sérialiser le JSON change les octets, donc la signature.
+
+Répondez `200` dès réception et traitez ensuite ; le même contenu reste lisible par `GET /commandes`, donc rien n'est perdu si votre serveur était hors ligne.
 
 Exemple de charge utile : [`exemple-webhook-commande.json`](exemple-webhook-commande.json).
 
