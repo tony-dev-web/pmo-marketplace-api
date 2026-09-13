@@ -2,7 +2,15 @@ instances:
   - url: piecemotooccasion.docs.buildwithfern.com
 
 title: API vendeur PieceMotoOccasion
-favicon: images/favicon.png
+
+css: assets/styles.css
+
+layout:
+  page-width: full
+  content-width: 46rem
+  tabs-placement: header
+  searchbar-placement: header
+  header-height: 4rem
 
 navigation:
   - section: Démarrer
@@ -11,14 +19,30 @@ navigation:
         path: pages/introduction.mdx
       - page: Authentification
         path: pages/authentification.mdx
+      - page: Envoyer son catalogue
+        path: pages/catalogue.mdx
       - page: Webhook des commandes
         path: pages/webhook.mdx
+      - page: Extensions prêtes à l'emploi
+        path: pages/extensions.mdx
   - api: Référence de l'API
 
 colors:
   accentPrimary:
     light: "#c8102e"
     dark: "#ff5a6e"
+  background:
+    light: "#ffffff"
+    dark: "#101317"
+  border:
+    light: "#e4e0dc"
+    dark: "#272c33"
+  card-background:
+    light: "#f6f4f2"
+    dark: "#191c21"
+
+footer-links:
+  github: https://github.com/tony-dev-web/pmo-marketplace-api
 
 navbar-links:
   - type: minimal

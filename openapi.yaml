@@ -51,7 +51,18 @@ paths:
     get:
       summary: Compte, statut, commission, boutique reliee
       responses:
-        "200": {description: OK}
+        "200":
+          description: OK
+          content:
+            application/json:
+              example:
+                vendeur: Casse Moto Sarthe
+                vendeur_id: 42
+                statut: valide
+                peut_vendre: true
+                commission: "12.00"
+                boutique: woocommerce
+                webhook: https://ma-casse.fr/wp-json/pmo/v1/commande
         "401": {description: Jeton invalide, content: {application/json: {schema: {$ref: "#/components/schemas/Erreur"}}}}
         "429": {description: Trop de requetes}
   /produits:
@@ -74,7 +85,25 @@ paths:
                   maxItems: 200
                   items: {$ref: "#/components/schemas/Fiche"}
       responses:
-        "200": {description: Pieces acceptees, avec le detail des fiches refusees}
+        "200":
+          description: Pieces acceptees, avec le detail des fiches refusees
+          content:
+            application/json:
+              example:
+                produits:
+                  - reference: CAR-548
+                    id: 1287
+                    titre: Carter embrayage XJ 600 Diversion
+                    prix_ttc: "29.90"
+                    stock: 1
+                    categorie: Carter
+                    statut: brouillon
+                    en_ligne: false
+                    url: https://piecemotooccasion.eu/piece/carter-embrayage-xj-600-diversion
+                    cree: true
+                erreurs:
+                  - reference: SEL-12
+                    erreur: "categorie est obligatoire (ex : Carenage, Selle, Jante)"
         "400": {description: Aucune fiche acceptee}
   /produits/{reference}/stock:
     patch:
@@ -103,10 +132,47 @@ paths:
   /commandes:
     get:
       summary: Commandes payees, lignes et adresse de livraison
+      description: >
+        Les 500 dernieres commandes payees, de la plus recente a la plus
+        ancienne. Le parametre depuis restreint aux commandes posterieures a
+        une date, format AAAA-MM-JJ.
       parameters:
-        - {name: depuis, in: query, schema: {type: string, format: date}}
+        - name: depuis
+          in: query
+          required: false
+          schema: {type: string, format: date}
+          example: "2026-09-01"
       responses:
-        "200": {description: OK}
+        "200":
+          description: OK
+          content:
+            application/json:
+              example:
+                commandes:
+                  - id: 1043
+                    statut: PAYEE
+                    expedition: ""
+                    date: "2026-09-13 10:12:00+00:00"
+                    suivi: ""
+                    livraison:
+                      nom: Camille Durand
+                      adresse: 12 rue des Lilas
+                      code_postal: "72300"
+                      ville: Sable-sur-Sarthe
+                      pays: France
+                      telephone: "0600000000"
+                      email: camille@example.com
+                      mode: colissimo48
+                      relais: null
+                    lignes:
+                      - reference: CAR-548
+                        produit_id: 1287
+                        titre: Carter embrayage XJ 600 Diversion
+                        quantite: 1
+                        prix_ttc: "29.90"
+                        total_ttc: "29.90"
+                    frais_port: "8.90"
+                    total_ttc: "38.80"
   /commandes/{id}/expedier:
     post:
       summary: Transporteur et numero de suivi

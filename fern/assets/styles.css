@@ -1,0 +1,109 @@
+/* PieceMotoOccasion — habillage de la documentation Fern.
+   Un seul accent, le rouge de la marque ; le reste reste neutre et lisible. */
+
+:root {
+  --pmo-rouge: #c8102e;
+  --pmo-encre: #16181d;
+  --pmo-gris: #5b6470;
+  --pmo-trait: rgba(22, 24, 29, .12);
+  --pmo-fond-doux: #f6f4f2;
+}
+
+:root.dark {
+  --pmo-rouge: #ff5a6e;
+  --pmo-encre: #eef0f3;
+  --pmo-gris: #a2abb8;
+  --pmo-trait: rgba(238, 240, 243, .14);
+  --pmo-fond-doux: #191c21;
+}
+
+/* Titres : un peu plus serres que le defaut, et une regle rouge sous les h2
+   pour decouper les longues pages de reference. */
+.fern-mdx-content h1 {
+  letter-spacing: -.02em;
+  line-height: 1.15;
+}
+
+.fern-mdx-content h2 {
+  letter-spacing: -.01em;
+  margin-top: 2.75rem;
+  padding-bottom: .4rem;
+  border-bottom: 2px solid var(--pmo-trait);
+}
+
+.fern-mdx-content h2::after {
+  content: "";
+  display: block;
+  width: 2.5rem;
+  height: 2px;
+  margin-bottom: -.4rem;
+  background: var(--pmo-rouge);
+  transform: translateY(.4rem);
+}
+
+/* Texte courant : mesure confortable, gris franc plutot que noir pur. */
+.fern-mdx-content p,
+.fern-mdx-content li {
+  color: var(--pmo-encre);
+  line-height: 1.7;
+}
+
+.fern-mdx-content a {
+  text-underline-offset: .18em;
+}
+
+/* Tableaux : les codes d'erreur et les champs de fiche sont l'essentiel de
+   cette doc, ils doivent se lire en diagonale. */
+.fern-mdx-content table {
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.fern-mdx-content thead th {
+  background: var(--pmo-fond-doux);
+  font-size: .8rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--pmo-gris);
+}
+
+.fern-mdx-content tbody tr:hover {
+  background: var(--pmo-fond-doux);
+}
+
+.fern-mdx-content td,
+.fern-mdx-content th {
+  border-bottom: 1px solid var(--pmo-trait);
+  padding: .6rem .75rem;
+  vertical-align: top;
+}
+
+/* Code : le nom des champs revient partout, il doit se distinguer du texte
+   sans crier. */
+.fern-mdx-content :not(pre) > code {
+  background: var(--pmo-fond-doux);
+  border: 1px solid var(--pmo-trait);
+  border-radius: .3rem;
+  padding: .1rem .35rem;
+  font-size: .875em;
+  white-space: nowrap;
+}
+
+/* Methodes HTTP dans la navigation : le verbe porte le sens, on l'affirme. */
+.fern-sidebar-link .fern-http-method {
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+/* Encadres Note et Warning : filet de couleur a gauche, pas de pave colore. */
+.fern-mdx-content .fern-callout {
+  border-left: 3px solid var(--pmo-rouge);
+  border-radius: 0 .4rem .4rem 0;
+}
+
+/* Impression : les casses impriment les procedures d'installation. */
+@media print {
+  .fern-sidebar, .fern-header, .fern-toc { display: none !important; }
+  .fern-mdx-content { max-width: none; }
+  .fern-mdx-content a::after { content: " (" attr(href) ")"; font-size: .8em; color: var(--pmo-gris); }
+}

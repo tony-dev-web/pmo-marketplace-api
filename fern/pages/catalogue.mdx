@@ -1,0 +1,54 @@
+---
+title: "Envoyer son catalogue"
+description: "Les champs d'une fiche, les images, le statut des pièces et la synchronisation du stock."
+---
+
+La fiche est la même partout : envoyée à l'API, elle vaut aussi bien pour un script maison que pour une extension.
+
+## Les champs
+
+| Champ | Type | Requis | Détail |
+|---|---|---|---|
+| `reference` | texte, 80 | oui | Votre identifiant, unique chez vous. C'est la clé : un second envoi avec la même référence met la pièce à jour. |
+| `titre` | texte, 62 | oui | Sert aussi de titre de page. |
+| `prix_ttc` | décimal | oui | En euros, supérieur à zéro. Le prix hors taxes est calculé à 20 %. |
+| `categorie` | texte, 60 | oui | Texte libre : Carénage, Selle, Jante, Carter… |
+| `stock` | entier | non | 1 par défaut. Zéro affiche la pièce en « Vendu » et la sort des flux. |
+| `description` | texte, 160 | non | Méta description de la page. Le titre est repris si vous ne la donnez pas. |
+| `information` | texte, 2160 | non | Le texte de la fiche. |
+| `marque` | texte, 80 | non | Yamaha, Honda… |
+| `modele` | texte, 120 | non | XJ 600 Diversion… |
+| `annee_min`, `annee_max` | entiers | non | Les deux ensemble produisent la liste des années de production. |
+| `cylindree` | entier | non | En centimètres cubes. |
+| `poids` | entier | non | En grammes. Sert au calcul des frais de port. |
+| `etat_achat` | Occasion ou Neuf | non | Occasion par défaut. |
+| `reference_oem` | texte, 40 | non | Référence constructeur. |
+| `url_boutique` | texte, 250 | non | La fiche chez vous. |
+| `images` | liste, 6 max | non | Adresses http publiques, 8 Mo par image. |
+
+Les textes trop longs sont coupés, ils ne provoquent pas d'erreur. Un champ facultatif absent lors d'une mise à jour laisse la valeur existante.
+
+## Les images
+
+Donnez des adresses http publiques : la marketplace télécharge chaque image et fabrique elle-même les formats. La première photo sert de vignette dans les listes, les suivantes garnissent la galerie.
+
+Chaque image est convertie en WebP et en AVIF, redimensionnée et filigranée. Une adresse injoignable, protégée par mot de passe, ou qui renvoie une page HTML au lieu d'une image, est ignorée sans faire échouer la fiche.
+
+<Note>
+Les photos ne sont téléchargées qu'à la création de la pièce. Une mise à jour ne remplace pas les images déjà en place : c'est ce qui permet de renvoyer tout le catalogue chaque nuit sans retélécharger des milliers de fichiers.
+</Note>
+
+## Le statut d'une pièce
+
+Une pièce créée par l'API arrive en **brouillon** et passe en ligne après vérification, comme une pièce saisie au formulaire. La réponse porte `statut` et `en_ligne`, vous savez donc à tout moment où en est chaque référence.
+
+Une mise à jour ne change jamais le statut. Un `DELETE` met le stock à zéro : la pièce s'affiche « Vendu » et sort des flux, mais n'est jamais effacée, car les commandes passées la référencent.
+
+## Synchroniser le stock
+
+Deux mécanismes, à mettre en place ensemble :
+
+1. **À l'évènement** : dès qu'une quantité change chez vous, `PATCH /produits/{reference}/stock`. C'est immédiat et ça ne coûte qu'une requête.
+2. **En rattrapage** : un envoi complet quotidien en `PUT /produits`. Les imports en masse, les corrections en base et les modifications hors interface n'émettent pas toujours d'évènement ; le passage de nuit remet tout d'aplomb.
+
+Toutes les extensions officielles fonctionnent ainsi. C'est le schéma à reprendre dans un connecteur maison.

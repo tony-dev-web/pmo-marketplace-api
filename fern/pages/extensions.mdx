@@ -1,0 +1,23 @@
+---
+title: "Extensions prêtes à l'emploi"
+description: "PrestaShop, WooCommerce, WordPress, Shopify, Drupal et Magento parlent déjà cette API."
+---
+
+Inutile d'écrire un connecteur si votre boutique tourne sur une plateforme courante : les extensions officielles sont gratuites et open source, et utilisent exactement l'API décrite ici.
+
+| Plateforme | Guide | Code source |
+|---|---|---|
+| PrestaShop 1.7 / 8 | [Installation](https://piecemotooccasion.eu/extensions/prestashop) | [pmo-marketplace-prestashop](https://github.com/tony-dev-web/pmo-marketplace-prestashop) |
+| WooCommerce | [Installation](https://piecemotooccasion.eu/extensions/woocommerce) | [pmo-marketplace-woocommerce](https://github.com/tony-dev-web/pmo-marketplace-woocommerce) |
+| WordPress | [Installation](https://piecemotooccasion.eu/extensions/wordpress) | [pmo-marketplace-wordpress](https://github.com/tony-dev-web/pmo-marketplace-wordpress) |
+| Shopify | [Installation](https://piecemotooccasion.eu/extensions/shopify) | [pmo-marketplace-shopify](https://github.com/tony-dev-web/pmo-marketplace-shopify) |
+| Drupal 10 / 11 | [Installation](https://piecemotooccasion.eu/extensions/drupal) | [pmo-marketplace-drupal](https://github.com/tony-dev-web/pmo-marketplace-drupal) |
+| Magento 2 | [Installation](https://piecemotooccasion.eu/extensions/magento) | [pmo-marketplace-magento](https://github.com/tony-dev-web/pmo-marketplace-magento) |
+
+## Écrire son propre connecteur
+
+Lisez le code d'une extension existante avant de partir de zéro : elles règlent toutes les mêmes questions, et de la même manière.
+
+- Le client Python [`exemples/pmo_client.py`](https://github.com/tony-dev-web/pmo-marketplace-api/blob/main/exemples/pmo_client.py) tient en cent lignes, sans dépendance hors `requests`.
+- La collection [Postman](https://www.postman.com/tony-d7b3346b-8131745/piece-moto-occasion/collection/9d8okfr/api-vendeur-piecemotooccasion) permet d'essayer les sept requêtes avant d'écrire une ligne.
+- La description [`openapi.yaml`](https://github.com/tony-dev-web/pmo-marketplace-api/blob/main/openapi.yaml) génère un client dans la plupart des langages.
