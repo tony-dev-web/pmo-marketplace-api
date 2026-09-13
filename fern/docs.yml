@@ -1,0 +1,29 @@
+instances:
+  - url: piecemotooccasion.docs.buildwithfern.com
+
+title: API vendeur PieceMotoOccasion
+favicon: images/favicon.png
+
+navigation:
+  - section: Démarrer
+    contents:
+      - page: Introduction
+        path: pages/introduction.mdx
+      - page: Authentification
+        path: pages/authentification.mdx
+      - page: Webhook des commandes
+        path: pages/webhook.mdx
+  - api: Référence de l'API
+
+colors:
+  accentPrimary:
+    light: "#c8102e"
+    dark: "#ff5a6e"
+
+navbar-links:
+  - type: minimal
+    text: Marketplace
+    url: https://piecemotooccasion.eu/extensions/api
+  - type: filled
+    text: Devenir vendeur
+    url: https://piecemotooccasion.eu/a2/

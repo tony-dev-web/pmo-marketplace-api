@@ -95,6 +95,18 @@ for commande in pmo.commandes(depuis="2026-09-01"):
     print(commande["id"], commande["total_ttc"])
 ```
 
+## Documentation Fern
+
+Le dossier `fern/` produit un site de documentation et des SDK à partir de `openapi.yaml`.
+
+```bash
+npm install -g fern-api
+fern check          # valide la description
+fern docs dev       # aperçu local du site
+fern generate --docs   # publie le site
+fern generate --group clients   # genere les SDK Python et TypeScript
+```
+
 Licence MIT.
 
 ## Les extensions PieceMotoOccasion

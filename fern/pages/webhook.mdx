@@ -1,0 +1,64 @@
+# Webhook des commandes
+
+Renseignez une URL de notification dans votre espace vendeur : chaque commande payée y est envoyée en `POST` JSON, signée par l'en-tête `X-Pmo-Signature`.
+
+```
+X-Pmo-Signature: sha256=<HMAC-SHA256 du corps avec votre jeton>
+```
+
+## Vérifier la signature
+
+Vérifiez avant de lire le contenu, sur le corps **brut** : re-sérialiser le JSON change les octets, donc la signature. Comparez en temps constant.
+
+```python
+import hashlib
+import hmac
+
+def signature_valide(jeton, corps, entete):
+    attendu = "sha256=" + hmac.new(jeton.encode(), corps, hashlib.sha256).hexdigest()
+    return hmac.compare_digest(attendu, entete or "")
+```
+
+Répondez `200` dès réception et traitez ensuite, sans attendre la fin de votre traitement.
+
+## La charge utile
+
+```json
+{
+  "evenement": "commande.payee",
+  "commande": {
+    "id": 1043,
+    "statut": "PAYEE",
+    "date": "2026-09-13 10:12:00+00:00",
+    "livraison": {
+      "nom": "Camille Durand",
+      "adresse": "12 rue des Lilas",
+      "code_postal": "72300",
+      "ville": "Sablé-sur-Sarthe",
+      "pays": "France",
+      "telephone": "0600000000",
+      "email": "camille@example.com",
+      "mode": "colissimo48",
+      "relais": null
+    },
+    "lignes": [
+      {
+        "reference": "CAR-548",
+        "produit_id": 1287,
+        "titre": "Carter embrayage XJ 600 Diversion",
+        "quantite": 1,
+        "prix_ttc": "29.90",
+        "total_ttc": "29.90",
+        "marque": "Yamaha",
+        "modele": "XJ 600 Diversion"
+      }
+    ],
+    "frais_port": "8.90",
+    "total_ttc": "38.80"
+  }
+}
+```
+
+<Note>
+Le courriel de notification part de toute façon, avec ou sans URL, et le même contenu reste lisible par `GET /commandes`. Si votre serveur était hors ligne, rien n'est perdu.
+</Note>

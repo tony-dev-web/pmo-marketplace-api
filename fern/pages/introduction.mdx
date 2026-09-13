@@ -1,0 +1,23 @@
+# API vendeur PieceMotoOccasion
+
+Reliez votre logiciel — gestion de casse, ERP, script maison — à la marketplace française de pièces moto d'occasion [PieceMotoOccasion](https://piecemotooccasion.eu) : votre catalogue et vos stocks montent, les commandes payées redescendent, vous déclarez l'expédition.
+
+C'est la même API que parlent les extensions PrestaShop, WooCommerce, WordPress, Shopify, Drupal et Magento.
+
+## En quatre étapes
+
+1. Générez votre jeton dans l'espace vendeur, page « Ma boutique en ligne », et vérifiez-le avec `GET /moi`.
+2. Envoyez votre catalogue par lots de 200 fiches en `PUT /produits`, puis corrigez les fiches listées dans `erreurs`.
+3. À chaque changement de stock, appelez `PATCH /produits/{reference}/stock`. Prévoyez un envoi complet quotidien : il rattrape ce que vos évènements ont manqué.
+4. Recevez les commandes par webhook ou par `GET /commandes`, expédiez, puis déclarez le suivi.
+
+## Limites
+
+- 600 requêtes par jeton et par tranche de dix minutes, tous chemins confondus. Au-delà, `429`.
+- 200 fiches par appel `PUT /produits`.
+- `GET /commandes` rend les 500 dernières commandes payées.
+- Six images par pièce, 8 Mo chacune, converties en WebP et AVIF.
+
+## Le cycle de vie d'une pièce
+
+Une pièce créée par l'API arrive en **brouillon** et passe en ligne après vérification, comme une pièce saisie au formulaire. Une mise à jour ne change jamais le statut ni les photos déjà en place. Un `DELETE` met le stock à zéro : la pièce s'affiche « Vendu » et sort des flux, mais n'est jamais effacée, car les commandes passées la référencent.

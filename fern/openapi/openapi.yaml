@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: API vendeur PieceMotoOccasion
+  version: "1.0.0"
+  description: >
+    Relie n'importe quel logiciel a la marketplace PieceMotoOccasion :
+    catalogue, stock, commandes, expedition. Jeton genere dans l'espace
+    vendeur. 600 requetes par jeton et par dix minutes.
+  license:
+    name: MIT
+servers:
+  - url: https://piecemotooccasion.eu/api/v1
+security:
+  - jeton: []
+components:
+  securitySchemes:
+    jeton:
+      type: http
+      scheme: bearer
+  schemas:
+    Fiche:
+      type: object
+      required: [reference, titre, prix_ttc, categorie]
+      properties:
+        reference: {type: string, maxLength: 80, description: Votre identifiant, unique chez vous}
+        titre: {type: string, maxLength: 62}
+        prix_ttc: {type: number, format: float}
+        categorie: {type: string, maxLength: 60, example: Carter}
+        stock: {type: integer, default: 1}
+        description: {type: string, maxLength: 160}
+        information: {type: string, maxLength: 2160}
+        marque: {type: string, maxLength: 80}
+        modele: {type: string, maxLength: 120}
+        annee_min: {type: integer}
+        annee_max: {type: integer}
+        cylindree: {type: integer}
+        poids: {type: integer, description: en grammes}
+        etat_achat: {type: string, enum: [Occasion, Neuf]}
+        reference_oem: {type: string, maxLength: 40}
+        url_boutique: {type: string, maxLength: 250}
+        images:
+          type: array
+          maxItems: 6
+          items: {type: string, format: uri}
+    Erreur:
+      type: object
+      properties:
+        erreur: {type: string}
+paths:
+  /moi:
+    get:
+      summary: Compte, statut, commission, boutique reliee
+      responses:
+        "200": {description: OK}
+        "401": {description: Jeton invalide, content: {application/json: {schema: {$ref: "#/components/schemas/Erreur"}}}}
+        "429": {description: Trop de requetes}
+  /produits:
+    get:
+      summary: Vos pieces chez PieceMotoOccasion
+      responses:
+        "200": {description: OK}
+    put:
+      summary: Creation ou mise a jour par reference (200 fiches par appel)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [produits]
+              properties:
+                produits:
+                  type: array
+                  maxItems: 200
+                  items: {$ref: "#/components/schemas/Fiche"}
+      responses:
+        "200": {description: Pieces acceptees, avec le detail des fiches refusees}
+        "400": {description: Aucune fiche acceptee}
+  /produits/{reference}/stock:
+    patch:
+      summary: Met a jour le stock
+      parameters:
+        - {name: reference, in: path, required: true, schema: {type: string}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [stock]
+              properties: {stock: {type: integer, minimum: 0}}
+      responses:
+        "200": {description: OK}
+        "404": {description: Reference inconnue}
+  /produits/{reference}:
+    delete:
+      summary: Retire de la vente (stock a zero), sans effacer
+      parameters:
+        - {name: reference, in: path, required: true, schema: {type: string}}
+      responses:
+        "200": {description: Retiree}
+        "404": {description: Reference inconnue}
+  /commandes:
+    get:
+      summary: Commandes payees, lignes et adresse de livraison
+      parameters:
+        - {name: depuis, in: query, schema: {type: string, format: date}}
+      responses:
+        "200": {description: OK}
+  /commandes/{id}/expedier:
+    post:
+      summary: Transporteur et numero de suivi
+      parameters:
+        - {name: id, in: path, required: true, schema: {type: integer}}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [suivi]
+              properties:
+                transporteur: {type: string, maxLength: 50}
+                suivi: {type: string, maxLength: 100}
+      responses:
+        "200": {description: OK}
+        "404": {description: Commande introuvable}

@@ -1,0 +1,18 @@
+api:
+  specs:
+    - openapi: openapi/openapi.yaml
+groups:
+  clients:
+    generators:
+      - name: fernapi/fern-python-sdk
+        version: 4.3.0
+        output:
+          location: local-file-system
+          path: ../sdk/python
+        config:
+          client_class_name: Pmo
+      - name: fernapi/fern-typescript-node-sdk
+        version: 0.46.0
+        output:
+          location: local-file-system
+          path: ../sdk/typescript

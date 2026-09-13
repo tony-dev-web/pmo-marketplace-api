@@ -1,0 +1,27 @@
+# Authentification
+
+Toutes les requêtes portent votre jeton dans l'en-tête `Authorization`, et répondent en JSON.
+
+```bash
+curl https://piecemotooccasion.eu/api/v1/moi \
+  -H "Authorization: Bearer VOTRE_JETON"
+```
+
+Le jeton se génère dans votre espace vendeur, page « Ma boutique en ligne ». Il n'y en a qu'un par vendeur : en regénérer un coupe immédiatement l'ancien, c'est le moyen de révoquer une extension compromise.
+
+## Codes et erreurs
+
+Toute erreur revient sous la forme `{"erreur": "…"}`.
+
+| Code | Quand | Que faire |
+|---|---|---|
+| `200` | Appel accepté, même si certaines fiches sont refusées | Lire le tableau `erreurs` de la réponse |
+| `400` | JSON invalide, aucune fiche valide, date mal formée | Corriger l'appel, ne pas réessayer tel quel |
+| `401` | Jeton absent, mal formé ou révoqué | Regénérer le jeton |
+| `404` | Référence ou commande inconnue chez vous | La recherche est limitée à votre catalogue |
+| `405` | Méthode non autorisée sur ce chemin | Voir la référence de l'API |
+| `429` | Plus de 600 requêtes en dix minutes | Attendre, puis grouper les envois |
+
+<Warning>
+Le jeton donne accès à votre catalogue et aux adresses de livraison de vos acheteurs. Gardez-le côté serveur, jamais dans une page ni dans une application mobile.
+</Warning>
