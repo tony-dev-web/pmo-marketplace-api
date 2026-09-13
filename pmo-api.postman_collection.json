@@ -1,38 +1,10 @@
 {
   "info": {
+    "_postman_id": "2f9d5c59-f357-4ecd-9611-4885413b4cee",
     "name": "API vendeur PieceMotoOccasion",
-    "description": "Relie votre logiciel a la marketplace PieceMotoOccasion : catalogue, stock, commandes, expedition.\n\nAvant de commencer : dans l'onglet Variables, collez votre jeton (espace vendeur, page « Ma boutique en ligne »). Il est envoye en Bearer sur toutes les requetes.\n\nLimite : 600 requetes par jeton et par dix minutes, au-dela 429.\n\nDocumentation : https://piecemotooccasion.eu/extensions/api\nCode et exemples : https://github.com/tony-dev-web/pmo-marketplace-api",
+    "description": "Relie votre logiciel a la marketplace PieceMotoOccasion : catalogue, stock, commandes, expedition.\n\nCollez votre jeton dans la variable jeton (espace vendeur, page Ma boutique en ligne).\n\n600 requetes par jeton et par dix minutes, au-dela 429.\n\nDocumentation : https://piecemotooccasion.eu/extensions/api",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
-  "auth": {
-    "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "{{jeton}}",
-        "type": "string"
-      }
-    ]
-  },
-  "variable": [
-    {
-      "key": "base_url",
-      "value": "https://piecemotooccasion.eu/api/v1"
-    },
-    {
-      "key": "jeton",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "key": "reference",
-      "value": "CAR-548"
-    },
-    {
-      "key": "commande_id",
-      "value": "1043"
-    }
-  ],
   "item": [
     {
       "name": "Mon compte",
@@ -49,7 +21,8 @@
           ]
         },
         "description": "Compte, statut, commission, boutique reliee."
-      }
+      },
+      "response": []
     },
     {
       "name": "Lister mes pieces",
@@ -66,7 +39,8 @@
           ]
         },
         "description": "Les pieces deja chez PieceMotoOccasion."
-      }
+      },
+      "response": []
     },
     {
       "name": "Envoyer des pieces",
@@ -87,7 +61,7 @@
             "produits"
           ]
         },
-        "description": "Creation ou mise a jour par reference, 200 fiches par appel.\n\nObligatoires : reference, titre, prix_ttc, categorie. Une piece nouvelle est verifiee avant sa mise en ligne ; une mise a jour ne change pas son statut.",
+        "description": "Creation ou mise a jour par reference, 200 fiches par appel. Obligatoires : reference, titre, prix_ttc, categorie.",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"produits\": [\n    {\n      \"reference\": \"CAR-548\",\n      \"titre\": \"Carter embrayage XJ 600 Diversion\",\n      \"prix_ttc\": 29.9,\n      \"categorie\": \"Carter\",\n      \"marque\": \"Yamaha\",\n      \"modele\": \"XJ 600 Diversion\",\n      \"annee_min\": 1998,\n      \"annee_max\": 2003,\n      \"stock\": 1,\n      \"poids\": 1200,\n      \"etat_achat\": \"Occasion\",\n      \"images\": [\n        \"https://ma-casse.fr/photos/car-548.jpg\"\n      ]\n    }\n  ]\n}",
@@ -97,7 +71,8 @@
             }
           }
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "Mettre a jour un stock",
@@ -120,7 +95,7 @@
             "stock"
           ]
         },
-        "description": "Stock a zero : la piece s'affiche « Vendu » et sort des flux, sans etre effacee.",
+        "description": "Stock a zero : la piece s'affiche Vendu et sort des flux, sans etre effacee.",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"stock\": 0\n}",
@@ -130,7 +105,8 @@
             }
           }
         }
-      }
+      },
+      "response": []
     },
     {
       "name": "Retirer une piece",
@@ -147,8 +123,9 @@
             "{{reference}}"
           ]
         },
-        "description": "Retire de la vente (stock a zero). La piece n'est jamais supprimee : les commandes passees la referencent."
-      }
+        "description": "Retire de la vente. La piece n'est jamais supprimee : les commandes passees la referencent."
+      },
+      "response": []
     },
     {
       "name": "Commandes payees",
@@ -170,8 +147,9 @@
             }
           ]
         },
-        "description": "Commandes payees, lignes et adresse de livraison. Le parametre depuis est facultatif."
-      }
+        "description": "Commandes payees, lignes et adresse de livraison."
+      },
+      "response": []
     },
     {
       "name": "Declarer l'expedition",
@@ -194,7 +172,7 @@
             "expedier"
           ]
         },
-        "description": "Transporteur et numero de suivi. L'acheteur est informe.",
+        "description": "Transporteur et numero de suivi.",
         "body": {
           "mode": "raw",
           "raw": "{\n  \"transporteur\": \"Colissimo\",\n  \"suivi\": \"6A12345678901\"\n}",
@@ -204,7 +182,40 @@
             }
           }
         }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jeton}}",
+        "type": "string"
       }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://piecemotooccasion.eu/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "jeton",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "reference",
+      "value": "CAR-548",
+      "type": "string"
+    },
+    {
+      "key": "commande_id",
+      "value": "1043",
+      "type": "string"
     }
   ]
 }

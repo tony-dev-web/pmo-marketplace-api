@@ -3,6 +3,7 @@
 Reliez n'importe quel logiciel — logiciel de gestion de casse, ERP, script maison — à la marketplace française [PieceMotoOccasion](https://piecemotooccasion.eu) : votre catalogue et vos stocks montent, les commandes payées redescendent, vous renseignez l'expédition. C'est la même API que parlent les extensions PrestaShop, WooCommerce, Drupal et Magento.
 
 **Documentation** : https://piecemotooccasion.eu/extensions/api
+**Collection Postman** : https://www.postman.com/tony-d7b3346b-8131745/piece-moto-occasion/collection/9d8okfr/api-vendeur-piecemotooccasion
 **Jeton** : espace vendeur, page « Ma boutique en ligne »
 **Base** : `https://piecemotooccasion.eu/api/v1`
 
@@ -51,7 +52,7 @@ Exemple de charge utile : [`exemple-webhook-commande.json`](exemple-webhook-comm
 - [`exemples/pmo_client.py`](exemples/pmo_client.py) — client Python complet, sans dépendance hors `requests`.
 - [`exemples/synchroniser.py`](exemples/synchroniser.py) — envoi du catalogue, stock, commandes, expédition.
 - [`exemples/recevoir_commande.py`](exemples/recevoir_commande.py) — réception du webhook en Flask, signature vérifiée.
-- [`pmo-api.postman_collection.json`](pmo-api.postman_collection.json) — collection Postman : importez-la, collez votre jeton dans la variable `jeton`, les sept requêtes sont prêtes.
+- [`pmo-api.postman_collection.json`](pmo-api.postman_collection.json) — collection Postman : importez-la, collez votre jeton dans la variable `jeton`, les sept requêtes sont prêtes. Elle est aussi [publiée sur Postman](https://www.postman.com/tony-d7b3346b-8131745/piece-moto-occasion/collection/9d8okfr/api-vendeur-piecemotooccasion).
 
 ```python
 from pmo_client import Pmo
