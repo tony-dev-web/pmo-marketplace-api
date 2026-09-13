@@ -51,6 +51,7 @@ Exemple de charge utile : [`exemple-webhook-commande.json`](exemple-webhook-comm
 - [`exemples/pmo_client.py`](exemples/pmo_client.py) — client Python complet, sans dépendance hors `requests`.
 - [`exemples/synchroniser.py`](exemples/synchroniser.py) — envoi du catalogue, stock, commandes, expédition.
 - [`exemples/recevoir_commande.py`](exemples/recevoir_commande.py) — réception du webhook en Flask, signature vérifiée.
+- [`pmo-api.postman_collection.json`](pmo-api.postman_collection.json) — collection Postman : importez-la, collez votre jeton dans la variable `jeton`, les sept requêtes sont prêtes.
 
 ```python
 from pmo_client import Pmo

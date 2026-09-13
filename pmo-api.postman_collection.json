@@ -1,0 +1,210 @@
+{
+  "info": {
+    "name": "API vendeur PieceMotoOccasion",
+    "description": "Relie votre logiciel a la marketplace PieceMotoOccasion : catalogue, stock, commandes, expedition.\n\nAvant de commencer : dans l'onglet Variables, collez votre jeton (espace vendeur, page « Ma boutique en ligne »). Il est envoye en Bearer sur toutes les requetes.\n\nLimite : 600 requetes par jeton et par dix minutes, au-dela 429.\n\nDocumentation : https://piecemotooccasion.eu/extensions/api\nCode et exemples : https://github.com/tony-dev-web/pmo-marketplace-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jeton}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://piecemotooccasion.eu/api/v1"
+    },
+    {
+      "key": "jeton",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "reference",
+      "value": "CAR-548"
+    },
+    {
+      "key": "commande_id",
+      "value": "1043"
+    }
+  ],
+  "item": [
+    {
+      "name": "Mon compte",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/moi",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "moi"
+          ]
+        },
+        "description": "Compte, statut, commission, boutique reliee."
+      }
+    },
+    {
+      "name": "Lister mes pieces",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/produits",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "produits"
+          ]
+        },
+        "description": "Les pieces deja chez PieceMotoOccasion."
+      }
+    },
+    {
+      "name": "Envoyer des pieces",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/produits",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "produits"
+          ]
+        },
+        "description": "Creation ou mise a jour par reference, 200 fiches par appel.\n\nObligatoires : reference, titre, prix_ttc, categorie. Une piece nouvelle est verifiee avant sa mise en ligne ; une mise a jour ne change pas son statut.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"produits\": [\n    {\n      \"reference\": \"CAR-548\",\n      \"titre\": \"Carter embrayage XJ 600 Diversion\",\n      \"prix_ttc\": 29.9,\n      \"categorie\": \"Carter\",\n      \"marque\": \"Yamaha\",\n      \"modele\": \"XJ 600 Diversion\",\n      \"annee_min\": 1998,\n      \"annee_max\": 2003,\n      \"stock\": 1,\n      \"poids\": 1200,\n      \"etat_achat\": \"Occasion\",\n      \"images\": [\n        \"https://ma-casse.fr/photos/car-548.jpg\"\n      ]\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Mettre a jour un stock",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/produits/{{reference}}/stock",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "produits",
+            "{{reference}}",
+            "stock"
+          ]
+        },
+        "description": "Stock a zero : la piece s'affiche « Vendu » et sort des flux, sans etre effacee.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"stock\": 0\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Retirer une piece",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/produits/{{reference}}",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "produits",
+            "{{reference}}"
+          ]
+        },
+        "description": "Retire de la vente (stock a zero). La piece n'est jamais supprimee : les commandes passees la referencent."
+      }
+    },
+    {
+      "name": "Commandes payees",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/commandes?depuis=2026-09-01",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "commandes"
+          ],
+          "query": [
+            {
+              "key": "depuis",
+              "value": "2026-09-01"
+            }
+          ]
+        },
+        "description": "Commandes payees, lignes et adresse de livraison. Le parametre depuis est facultatif."
+      }
+    },
+    {
+      "name": "Declarer l'expedition",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/commandes/{{commande_id}}/expedier",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "commandes",
+            "{{commande_id}}",
+            "expedier"
+          ]
+        },
+        "description": "Transporteur et numero de suivi. L'acheteur est informe.",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"transporteur\": \"Colissimo\",\n  \"suivi\": \"6A12345678901\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
