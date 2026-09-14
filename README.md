@@ -81,6 +81,8 @@ Exemple de charge utile : [`exemple-webhook-commande.json`](exemple-webhook-comm
 
 - [`exemples/pmo_client.py`](exemples/pmo_client.py) — client Python complet, sans dépendance hors `requests`.
 - [`exemples/synchroniser.py`](exemples/synchroniser.py) — envoi du catalogue, stock, commandes, expédition.
+- [`modele-catalogue.csv`](modele-catalogue.csv) — le modèle de fichier accepté par la console vendeur et par `importer_csv.py`.
+- [`exemples/importer_csv.py`](exemples/importer_csv.py) — envoie un CSV de catalogue vers l'API, pour un envoi automatique chaque nuit.
 - [`exemples/recevoir_commande.py`](exemples/recevoir_commande.py) — réception du webhook en Flask, signature vérifiée.
 - [`pmo-api.postman_collection.json`](pmo-api.postman_collection.json) — collection Postman : importez-la, collez votre jeton dans la variable `jeton`, les sept requêtes sont prêtes. Elle est aussi [publiée sur Postman](https://www.postman.com/tony-d7b3346b-8131745/piece-moto-occasion/collection/9d8okfr/api-vendeur-piecemotooccasion).
 
