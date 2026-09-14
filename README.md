@@ -111,12 +111,29 @@ fern generate --group clients   # genere les SDK Python et TypeScript
 
 Licence MIT.
 
+## Les plateformes prises en charge
+
+Les extensions officielles parlent cette API. Chaque plateforme reste éditée par son propre projet :
+
+| Plateforme | Site officiel | Code source de la plateforme |
+|---|---|---|
+| PrestaShop | https://www.prestashop.com | https://github.com/PrestaShop/PrestaShop |
+| WooCommerce | https://woocommerce.com | https://github.com/woocommerce/woocommerce |
+| WordPress | https://wordpress.org | https://github.com/WordPress/WordPress |
+| Shopify | https://www.shopify.com | https://github.com/Shopify/shopify-app-js |
+| Drupal | https://www.drupal.org | https://github.com/drupal/drupal |
+| Magento, Adobe Commerce | https://business.adobe.com/products/magento/magento-commerce.html | https://github.com/magento/magento2 |
+| Odoo | https://www.odoo.com | https://github.com/odoo/odoo |
+| Dolibarr | https://www.dolibarr.org | https://github.com/Dolibarr/dolibarr |
+
 ## Les extensions PieceMotoOccasion
 
 - [PrestaShop](https://github.com/tony-dev-web/pmo-marketplace-prestashop)
 - [WooCommerce](https://github.com/tony-dev-web/pmo-marketplace-woocommerce)
 - [WordPress](https://github.com/tony-dev-web/pmo-marketplace-wordpress)
 - [Shopify](https://github.com/tony-dev-web/pmo-marketplace-shopify)
+- [Odoo](https://github.com/tony-dev-web/pmo-marketplace-odoo)
+- [Dolibarr](https://github.com/tony-dev-web/pmo-marketplace-dolibarr)
 - [Drupal](https://github.com/tony-dev-web/pmo-marketplace-drupal)
 - [Magento](https://github.com/tony-dev-web/pmo-marketplace-magento)
 - Toutes les extensions : https://piecemotooccasion.eu/extensions/
