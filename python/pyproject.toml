@@ -1,0 +1,31 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "piecemotooccasion"
+version = "1.0.0"
+description = "Client Python de l'API vendeur PieceMotoOccasion : catalogue, stock, commandes, webhook signe"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "PieceMotoOccasion" }]
+keywords = ["piecemotooccasion", "marketplace", "piece-moto", "casse-moto", "motorcycle-parts", "api"]
+dependencies = ["requests>=2.25"]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: French",
+  "Programming Language :: Python :: 3",
+  "Topic :: Office/Business",
+  "Topic :: Internet :: WWW/HTTP",
+]
+
+[project.urls]
+Documentation = "https://piecemotooccasion.eu/extensions/api"
+Source = "https://github.com/tony-dev-web/pmo-marketplace-api"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/piecemotooccasion"]

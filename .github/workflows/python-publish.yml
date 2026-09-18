@@ -1,12 +1,14 @@
-# This workflow will upload a Python Package to PyPI when a release is created
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python#publishing-to-package-registries
+# Publie le paquet « piecemotooccasion » sur PyPI a la creation d'une release.
+#
+# Pas de jeton : PyPI reconnait ce depot et ce fichier par OpenID Connect
+# (« trusted publisher »), d'ou la permission id-token ci-dessous. Le nom du
+# fichier et l'environnement « pypi » sont declares cote PyPI : les renommer
+# ici casse la publication.
+#
+# Le paquet vit dans python/ ; le reste du depot est la documentation de
+# l'API, qui ne se publie pas.
 
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Upload Python Package
+name: Publier sur PyPI
 
 on:
   release:
@@ -15,10 +17,13 @@ on:
 permissions:
   contents: read
 
-jobs:
-  release-build:
-    runs-on: ubuntu-latest
+defaults:
+  run:
+    working-directory: python
 
+jobs:
+  construire:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -26,45 +31,38 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Build release distributions
+      # Les tests avant la construction : une release publiee est definitive
+      # sur PyPI, un numero de version ne se reutilise jamais.
+      - name: Tests
         run: |
-          # NOTE: put your own distribution build steps here.
+          python -m pip install --upgrade pip
+          python -m pip install requests
+          PYTHONPATH=src python -m unittest discover -s tests -v
+
+      - name: Construire les archives
+        run: |
           python -m pip install build
           python -m build
 
-      - name: Upload distributions
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: release-dists
-          path: dist/
+          name: archives
+          path: python/dist/
 
-  pypi-publish:
+  publier:
     runs-on: ubuntu-latest
-    needs:
-      - release-build
+    needs: [construire]
     permissions:
-      # IMPORTANT: this permission is mandatory for trusted publishing
-      id-token: write
-
-    # Dedicated environments with protections for publishing are strongly recommended.
-    # For more information, see: https://docs.github.com/en/actions/deployment/targeting-different-environments/using-environments-for-deployment#deployment-protection-rules
+      id-token: write          # obligatoire pour la publication de confiance
     environment:
       name: pypi
-      # OPTIONAL: uncomment and update to include your PyPI project URL in the deployment status:
-      # url: https://pypi.org/p/YOURPROJECT
-      #
-      # ALTERNATIVE: if your GitHub Release name is the PyPI project version string
-      # ALTERNATIVE: exactly, uncomment the following line instead:
-      # url: https://pypi.org/project/YOURPROJECT/${{ github.event.release.name }}
-
+      url: https://pypi.org/p/piecemotooccasion
     steps:
-      - name: Retrieve release distributions
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
         with:
-          name: release-dists
+          name: archives
           path: dist/
 
-      - name: Publish release distributions to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: pypa/gh-action-pypi-publish@release/v1
         with:
           packages-dir: dist/
